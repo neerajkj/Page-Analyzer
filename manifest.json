@@ -1,0 +1,32 @@
+{
+   "background": {
+      "scripts": [ "background.js" ]
+   },
+   "content_security_policy": "script-src 'self' 'unsafe-eval' http://localhost; object-src 'self'",
+   "description": "Find out the HTML & CSS compatiblity of your webPage with different Web Browsers. Works on Intranet as well.",
+   "icons": {
+      "128": "icon_128.png",
+      "16": "icon_16.png",
+      "48": "icon_48.png"
+   },
+    "content_scripts":[
+        {
+            "matches":["http://*/*","https://*/*"],
+            "js":["content.js"]
+        }
+    ],
+   "manifest_version": 2,
+   "minimum_chrome_version": "23.0.0.0",
+   "name": "Page Analyzer",
+   "browser_action": {
+      "default_icon": {
+         "19": "icon_19.png",
+         "38": "icon_38.png"
+      },
+      "default_title": "Get compatiblity report for different Browsers"
+   },
+   "permissions": [ "activeTab", "storage", "tabs", "webNavigation" , "<all_urls>" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "2.1",
+   "version_name" : "2.1"
+}
