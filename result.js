@@ -169,9 +169,24 @@ function apply()
 		if (e)
 		{
 			if (output[agents] != -1)
-			e.innerHTML = "Incompatibility issues with Version "+output[agents]+" and below.<br/>Incompatible Feature: <b>"+outputTag[agents]+"</b>";
+			{
+				var newEle = document.createElement("div");
+				newEle.style.color = '#ff6666';
+				newEle.innerText = "Version "+ output[agents]+" and below.";
+				
+				var newEleAgent = document.createElement("div");
+				newEleAgent.style.color = '#ff6666';
+				newEleAgent.innerText = outputTag[agents];
+
+				e.innerHTML = "Incompatibility issues with " + newEle.outerHTML + "Incompatible Feature: <b>" + newEleAgent.outerHTML + "</b></br>";
+			}
 			else
-				e.innerText = "No Compatibility Issues were detected.";
+			{
+				var newEle = document.createElement("div");
+				newEle.style.color = '#006666';
+				newEle.innerText = "No Compatibility Issues were detected.";
+				e.innerHTML = newEle.outerHTML ;
+			}
 		}
 	}
 }

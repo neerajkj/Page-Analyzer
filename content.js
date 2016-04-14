@@ -12,7 +12,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 		//console.log("payload CSS sent");
 		//ff();
 		fetch_AllCSS();
-		console.log("Total elements are:" + lstAllcss.length);
+		//console.log("Total elements are:" + lstAllcss.length);
 		//sendResponse({payload: lstAllcss,title: tabTitle, url: tabURL});
 		sendResponse({payload: lstAllcss});
 	}
@@ -25,6 +25,7 @@ function fetch_AllCSS(){
 	
 	
 	var lstCss = document.styleSheets;
+	//console.log(lstCss.length);
 	lstAllcss = [];
 	for(i=0;i<lstCss.length;i++){
 		var lstcssRules = lstCss[i].cssRules;

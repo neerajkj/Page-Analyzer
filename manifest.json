@@ -25,8 +25,18 @@
       },
       "default_title": "Get compatiblity report for different Browsers"
    },
-   "permissions": [ "activeTab", "storage", "tabs", "webNavigation" , "<all_urls>" ],
+   "permissions": [ "activeTab", "storage", "tabs", "webNavigation" , "<all_urls>" ,"contextMenus"],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "2.1",
-   "version_name" : "2.1"
+   "version": "2.2",
+   "version_name" : "2.2",
+   "commands": {
+   "_execute_browser_action": {
+            "suggested_key": {
+              "windows": "Ctrl+Shift+A",
+              "mac": "Command+Shift+A",
+              "chromeos": "Ctrl+Shift+A",
+              "linux": "Ctrl+Shift+A"
+            }
+          }
+   }
 }
