@@ -2,7 +2,7 @@
    "background": {
       "scripts": [ "background.js" ]
    },
-   "content_security_policy": "script-src 'self' 'unsafe-eval' http://localhost; object-src 'self'",
+   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com http://localhost; object-src 'self' ",
    "description": "Find out the HTML & CSS compatiblity of your webPage with different Web Browsers. Works on Intranet as well.",
    "icons": {
       "128": "icon_128.png",
@@ -27,8 +27,8 @@
    },
    "permissions": [ "activeTab", "storage", "tabs", "webNavigation" , "<all_urls>" ,"contextMenus"],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "2.2",
-   "version_name" : "2.2",
+   "version": "2.3",
+   "version_name" : "2.3",
    "commands": {
    "_execute_browser_action": {
             "suggested_key": {
