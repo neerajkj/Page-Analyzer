@@ -129,9 +129,7 @@ var lstcss2tags = ["background-color",
 "visibility",
 "z-index"
 ];
-//var htmltext = "";
-//var dp = new DOMParser();
-var lst1 = new Array();
+var lstHTML = new Array();
 var id = "";
 var lstCSS = [];
 //var param = "";
@@ -146,7 +144,6 @@ window.addEventListener('load', function() {
 });
 
 function init(){
-	
 	id = parseInt(location.hash.slice(1));   
 	chrome.tabs.get(id, callback);
 }
@@ -161,14 +158,8 @@ function callback(tab)
 		window.close();
 		return;
 	}
-		loadPackage('data');
-	for(ua in packageJSON.agents)
-	{
-		output[ua] = -1;
-		outputTag[ua] = undefined;
-	}
-	getPayloadHTML();
-	getPayloadCSS();
+	loadPackage('data');
+	
 }
 
 function apply()
@@ -205,21 +196,35 @@ function loadPackage(_tag)
 	//console.log("The json file is "+_tag);
 	var responseJSON = undefined;
 	var xhr = new XMLHttpRequest();
-xhr.open("GET", chrome.extension.getURL('/data/'+_tag+'.json'),false);
+xhr.open("GET", chrome.extension.getURL('/data/'+_tag+'.json'),true);
 
 xhr.onload = function(){
 		if (xhr.status != 200)
 		{	return;}
 			packageJSON = JSON.parse(xhr.responseText);
+			//console.log("package returned");
+			getData();
 	};
 	xhr.send(null);
 }
+
+function getData()
+{
+	for(ua in packageJSON.agents)
+	{
+		output[ua] = -1;
+		outputTag[ua] = undefined;
+	}
+	getPayloadHTML();
+	getPayloadCSS();
+}
+
 function getPayloadCSS(){
 	chrome.tabs.sendMessage(id, {message: 'getCSS'}, parseCSS);
 }
 
 function parseCSS(response) {
-	//console.log(response);
+	//console.log("css data fetched");
 	if ((response == undefined)||(response.payload == undefined))
 	{
 		document.getElementById("pagetitle").innerText = msgPageLoad;
@@ -277,16 +282,17 @@ function processTag(tag,responseJSON)
 	var _val = {};
 	for(key in responseJSON.stats)
 			{
-				//console.log(key);
+				console.log(key);
 				var arr_n = [];
 				var arr_y = [];
 				var arr_x = [];
 				var arr_a = [];
 				var obj = responseJSON.stats[key];
-				//console.log(obj);
+				//if (key == "and_uc")
+					console.log(obj);
 				for(key2 in obj)
 				{
-					//console.log(key);
+					console.log(key2);
 					if (obj[key2] == "n")
 						arr_n.push(key2);
 					else if(obj[key2] == "y")
@@ -305,17 +311,24 @@ function processTag(tag,responseJSON)
 						//v2
 					}
 				}
-				//console.log(arr_n.join());
-				//console.log(arr_y.join());
+				console.log(arr_n.join());
+				console.log(arr_y.join());
 				//continue;
 				var max_n = -1;
 				for(element in arr_n){
 					//alert(element);
 					try{
+						if (key == "and_uc")
+							console.log(element);
 						var version = Number(element);
 						if (version > max_n)
 						{
 							max_n = version;
+							if (key == "and_uc")
+							{
+								console.log(version);
+								console.log(max_n);
+							}
 						}
 					}
 					catch(e){
@@ -360,32 +373,25 @@ function processTag(tag,responseJSON)
 
 function getPayloadHTML(){
 	//console.log("payload called");
-	chrome.tabs.sendMessage(id, {message: 'getHTML'}, parseDoc);
+	chrome.tabs.sendMessage(id, {message: 'getHTML'}, parseHTML);
 }
 
-// A function to use as callback
-function parseDoc(response) {
-	
-	var dp = new DOMParser();
+function parseHTML(response) {
 	if ((response == undefined)||(response.payload == undefined))
 	{
 		alert(msgPageLoad);
 		document.getElementById("pagetitle").innerText = msgPageLoad;
 		return;
 	}
-	var dpout = dp.parseFromString(response.payload,'text/html');
-	lst1 = [];
-	getAllTags(dpout);
-	lst1 = lst1.sort();
+	lstHTML = response.payload;
 	lstHtml4tags.forEach(removehtml4);
-	startProcess(lst1);
-	//console.log("HTML 5 length: "+lst1.length);
+	startProcess(lstHTML);
 }
 
 function removehtml4(item,index){
-	var fIndex = lst1.indexOf(item);
+	var fIndex = lstHTML.indexOf(item);
 	if (fIndex > -1)
-		lst1.splice(fIndex,1);
+		lstHTML.splice(fIndex,1);
 }
 
 function removecss2(item,index){
@@ -393,27 +399,3 @@ function removecss2(item,index){
 	if (fIndex > -1)
 		lstCSS.splice(fIndex,1);
 }
-
-function getAllTags(content)
-        {		
-            for(i=0; i<content.all.length;i++)
-                {
-                    if (lst1.indexOf(content.all[i].tagName.toLowerCase()) == -1)
-			{
-				lst1.push(content.all[i].tagName.toLowerCase());
-			}      
-                }
-				return;
-			if (lst1.indexOf(content.nodeName.toLowerCase()) == -1)
-			{
-				lst1.push(content.nodeName.toLowerCase());
-				console.log(lst1.indexOf(content.nodeName.toLowerCase())+ content.nodeName.toLowerCase());
-			}
-            if(content.hasChildNodes()==false)
-                return;
-            else{
-                    for(i=0;i<content.childElementCount;i++){
-                            getAllTags(content.childNodes[i])
-                        }
-                }
-        }

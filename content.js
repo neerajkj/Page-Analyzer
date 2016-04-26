@@ -3,27 +3,53 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 	console.log(sender.tab ? "from a content script":"from the extension");
 	//alert(msg.greeting);
     if (msg.message == 'getHTML') {
-		sendResponse({payload: document.all[0].outerHTML});
-		//console.log("payload HTML sent");
+		//sendResponse({payload: document.all[0].outerHTML});
+		fetch_AllHTML();
+		sendResponse({payload: lstAllhtml});
     }
 	else if(msg.message == 'getCSS')
 	{
-	
-		//console.log("payload CSS sent");
-		//ff();
 		fetch_AllCSS();
-		//console.log("Total elements are:" + lstAllcss.length);
-		//sendResponse({payload: lstAllcss,title: tabTitle, url: tabURL});
 		sendResponse({payload: lstAllcss});
 	}
 }
 );
-
+var lstAllhtml = [];
 var lstAllcss = [];
 
+function fetch_AllHTML(){
+	var dp = new DOMParser();
+	var dpout = dp.parseFromString(document.all[0].outerHTML,'text/html');
+	lstAllhtml = [];
+	getAllTags(dpout);
+	lstAllhtml = lstAllhtml.sort();
+}
+
+function getAllTags(content)
+        {		
+            for(i=0; i<content.all.length;i++)
+                {
+                    if (lstAllhtml.indexOf(content.all[i].tagName.toLowerCase()) == -1)
+			{
+				lstAllhtml.push(content.all[i].tagName.toLowerCase());
+			}      
+                }
+				return;
+			if (lstAllhtml.indexOf(content.nodeName.toLowerCase()) == -1)
+			{
+				lstAllhtml.push(content.nodeName.toLowerCase());
+				console.log(lstAllhtml.indexOf(content.nodeName.toLowerCase())+ content.nodeName.toLowerCase());
+			}
+            if(content.hasChildNodes()==false)
+                return;
+            else{
+                    for(i=0;i<content.childElementCount;i++){
+                            getAllTags(content.childNodes[i])
+                        }
+                }
+        }
+
 function fetch_AllCSS(){
-	
-	
 	var lstCss = document.styleSheets;
 	//console.log(lstCss.length);
 	lstAllcss = [];
