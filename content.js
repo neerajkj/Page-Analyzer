@@ -3,7 +3,6 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 	console.log(sender.tab ? "from a content script":"from the extension");
 	//alert(msg.greeting);
     if (msg.message == 'getHTML') {
-		//sendResponse({payload: document.all[0].outerHTML});
 		fetch_AllHTML();
 		sendResponse({payload: lstAllhtml});
     }

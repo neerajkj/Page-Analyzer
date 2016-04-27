@@ -9,7 +9,7 @@ _gaq.push(['_trackPageview']);
 })();
 
 
-var msgPageLoad = "Please close this tab.\nWait for the other tab to finish loading or refresh the webPage and click on Page Analyzer button again.";
+var msgPageLoad = "Wait for the other tab to finish loading or refresh the webPage and click on Page Analyzer button again.";
 var lstHtml4tags = ["a",
 "abbr",
 "address",
@@ -282,17 +282,17 @@ function processTag(tag,responseJSON)
 	var _val = {};
 	for(key in responseJSON.stats)
 			{
-				console.log(key);
+				//console.log(key);
 				var arr_n = [];
 				var arr_y = [];
 				var arr_x = [];
 				var arr_a = [];
 				var obj = responseJSON.stats[key];
 				//if (key == "and_uc")
-					console.log(obj);
+					//console.log(obj);
 				for(key2 in obj)
 				{
-					console.log(key2);
+					//console.log(key2);
 					if (obj[key2] == "n")
 						arr_n.push(key2);
 					else if(obj[key2] == "y")
@@ -311,28 +311,28 @@ function processTag(tag,responseJSON)
 						//v2
 					}
 				}
-				console.log(arr_n.join());
-				console.log(arr_y.join());
+				//console.log("arr_n"+ arr_n.join());
+				//console.log(arr_y.join());
 				//continue;
 				var max_n = -1;
-				for(element in arr_n){
-					//alert(element);
+				for(var i=0;i<arr_n.length;i++){
 					try{
-						if (key == "and_uc")
-							console.log(element);
-						var version = Number(element);
+						var version = Number(arr_n[i]);
+						if (!version)
+						{
+							//console.log(arr_n[i]);
+							var subversions = arr_n[i].split("-");
+							version = Number(subversions[subversions.length-1]);
+							if (!version)
+								console.log(subversions[subversions.length-1]);
+						}
 						if (version > max_n)
 						{
 							max_n = version;
-							if (key == "and_uc")
-							{
-								console.log(version);
-								console.log(max_n);
-							}
 						}
 					}
 					catch(e){
-						console.log("Number conversion error:"+arr_n[i]);
+						console.log("Number conversion error:"+arr_y[j]);
 					}
 				}
 				//console.log("Max_n"+max_n);
@@ -381,6 +381,7 @@ function parseHTML(response) {
 	{
 		alert(msgPageLoad);
 		document.getElementById("pagetitle").innerText = msgPageLoad;
+		window.close();
 		return;
 	}
 	lstHTML = response.payload;
